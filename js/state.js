@@ -92,3 +92,16 @@ export function resetAll() {
   state.stats = { shown: {}, picked: {}, rerolls: {}, runsStarted: 0, runsCompleted: 0 };
   emit();
 }
+
+// Più schede aperte: quando un'altra scheda salva, ricarichiamo lo stato per non sovrascriverlo.
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (!e.key || !e.key.startsWith('dtd-bgd:')) return;
+    state.settings = { ...DEFAULT_SETTINGS, ...load('settings', {}) };
+    state.runs = load('runs', []);
+    state.currentId = load('currentId', null);
+    state.pool = load('pool', state.pool);
+    state.stats = load('stats', state.stats);
+    emit();
+  });
+}

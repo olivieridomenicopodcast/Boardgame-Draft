@@ -34,9 +34,8 @@
 
 * { box-sizing: border-box; }
 html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-html.stream { font-size: 21px; }
-@media (min-width: 1280px) { html.stream { font-size: 26px; } }
-@media (min-width: 1900px) { html.stream { font-size: 32px; } }
+/* Modalità Stream: la scala segue l'ALTEZZA della viewport, così una schermata 16:9 (720p, 1080p, 4K) è sempre piena e senza scroll */
+html.stream { font-size: clamp(17px, 2.5vh, 40px); }
 
 body {
   margin: 0;
@@ -203,9 +202,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 .card.picked-anim .inner { animation: pop .45s ease; }
 @keyframes pop { 50% { transform: scale(1.05); } }
 
-.actions { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; padding: .7rem 0 .4rem; background: linear-gradient(to top, var(--bg) 70%, transparent); }
+.actions { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; padding: .7rem 0 .4rem; }
 .actions .btn.primary { flex: 2 1 220px; }
 .hint { text-align: center; font-size: .8rem; color: var(--muted); }
+.draft { padding-bottom: 1.5rem; }
 html.stream .hint, html.stream .chips { display: none; }
 
 /* ---------- Brief (scatola di gioco) ---------- */
@@ -286,8 +286,10 @@ html.no-anim *, html.no-anim *::before, html.no-anim *::after { animation: none 
 html.stream .btn { min-height: 64px; }
 html.stream .panel { padding: 1.4rem 1.6rem; }
 html.stream .topbar h1 { font-size: 1.8rem; }
-html.stream .cat-head h2 { font-size: 3rem; }
-html.stream .cat-head .big-emoji { font-size: 3.4rem; }
+html.stream .cat-head h2 { font-size: 2.2rem; }
+html.stream .cat-head .big-emoji { font-size: 2.4rem; }
+html.stream .draft { min-height: 0; gap: .5rem; padding-bottom: 0; }
+html.stream #view { padding-top: .5rem; padding-bottom: 2.4rem; }
 html.stream .card .desc { font-size: 1.1rem; }
-@media (min-width: 760px) { html.stream .card { height: clamp(300px, 52vh, 620px); } }
+@media (min-width: 760px) { html.stream .card, html.stream .cards.single .card { height: clamp(220px, 44vh, 700px); } }
 @media (max-width: 480px) { .bar-row { grid-template-columns: 1fr auto; } .bar-row .bar { grid-column: 1 / -1; order: 3; } }

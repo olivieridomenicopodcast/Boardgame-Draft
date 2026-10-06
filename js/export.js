@@ -179,7 +179,7 @@ export function drawBrief(canvas, run, format = '16x9') {
   ctx.fillText(title, pad, y);
   ctx.font = `600 ${Math.round(h * (wide ? 0.024 : 0.015))}px ${FONT}`;
   ctx.fillStyle = '#b9a98f';
-  y += Math.round(h * 0.035);
+  y += Math.round(h * (wide ? 0.055 : 0.035));
   ctx.fillText(`Seed ${run.seed} · ${run.mode === 'chaos' ? 'Modalità Caos' : 'Modalità Classica'}`, pad, y);
 
   // Piè di pagina (pitch)
@@ -206,7 +206,7 @@ export function drawBrief(canvas, run, format = '16x9') {
     const em = Math.round(cellH * 0.5);
     ctx.font = `${em}px ${EMOJI}`; ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle';
     ctx.fillText(p.emoji, x + 22, yy + cellH / 2 + 2);
-    const tx = x + 22 + em + 16, tw = cellW - (tx - x) - 14;
+    const tx = x + 22 + Math.round(em * 1.3) + 14, tw = cellW - (tx - x) - 14;
     ctx.textBaseline = 'alphabetic';
     const ls = Math.max(13, Math.round(cellH * 0.19));
     ctx.font = `700 ${ls}px ${FONT}`; ctx.fillStyle = '#f5a524';

@@ -128,16 +128,16 @@ export function setup(root) {
     h('button', { class: 'btn primary big block', type: 'submit', text: '🚀 Inizia il draft' }));
 
   form.addEventListener('change', () => {
-    customRow.hidden = form.elements.deadline.value !== 'custom';
+    customRow.hidden = new FormData(form).get('deadline') !== 'custom';
   });
 
   function start() {
-    const f = form.elements;
+    const f = new FormData(form); // NB: form.elements.length sarebbe il numero di campi, non il radio "length"
     const days = Math.max(1, Math.min(365, parseInt(customDays.value, 10) || 7));
-    const dl = f.deadline.value;
+    const dl = f.get('deadline');
     const setup = {
-      mode: f.mode.value, length: f.length.value, rerolls: parseInt(f.rerolls.value, 10),
-      bans: parseInt(f.bans.value, 10), seed: normalizeSeed(seedInput.value), deadline: dl, customDays: days,
+      mode: f.get('mode'), length: f.get('length'), rerolls: parseInt(f.get('rerolls'), 10),
+      bans: parseInt(f.get('bans'), 10), seed: normalizeSeed(seedInput.value), deadline: dl, customDays: days,
     };
     S.updateSettings({ lastSetup: setup });
     const deadlineDays = dl === 'custom' ? days : DEADLINES[dl] || 0;
