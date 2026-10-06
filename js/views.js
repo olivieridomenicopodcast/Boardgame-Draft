@@ -209,6 +209,18 @@ export function ban(root) {
 
 /* ---------- Draft ---------- */
 
+/** Pannello "Il tuo gioco finora": tutte le scelte fatte (e le categorie saltate). */
+function pickedPanel(run) {
+  const done = run.picks.filter((p) => !p.auto);
+  return h('details', { class: 'picked-panel', open: true },
+    h('summary', {}, `🎲 Il tuo gioco finora (${done.filter((p) => !p.skipped).length}/${run.catIds.length})`),
+    done.length
+      ? h('ul', { class: 'picked-list' }, done.map((p) => h('li', { class: p.skipped ? 'skipped' : '' },
+          h('span', { class: 'emoji', 'aria-hidden': 'true', text: p.skipped ? '⏭' : p.emoji }),
+          h('span', {}, h('span', { class: 'cat', text: p.catName }), h('strong', { text: p.skipped ? 'Saltata' : p.name })))))
+      : h('p', { class: 'muted small', text: 'Ancora nessuna scelta: la tua prima carta è qui sopra!' }));
+}
+
 function tagChips(item) {
   return (item.tags || []).map((t) => TAG_LABELS[t]).filter(Boolean).slice(0, 3).map((t) => h('span', { class: 'tag', text: t }));
 }
@@ -272,8 +284,6 @@ export function draft(root) {
           h('span', { class: 'muted small' }, run.mode === 'chaos' ? '🌪️ Caos' : `Seed ${run.seed}`)),
         h('div', { class: 'progress-bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': cur.catIdx },
           h('b', { style: { width: `${(cur.catIdx / total) * 100}%` } }))),
-      run.picks.some((p) => !p.skipped) && h('div', { class: 'chips', 'aria-label': 'Il tuo gioco finora' },
-        run.picks.filter((p) => !p.skipped).map((p) => h('span', { class: 'chip', title: p.catName }, p.emoji, ' ', p.name))),
       h('div', { class: 'cat-head' },
         h('div', { class: 'big-emoji', 'aria-hidden': 'true', text: cat.emoji }),
         h('h2', { text: cat.name }),
@@ -284,8 +294,9 @@ export function draft(root) {
         h('button', { class: 'btn', onclick: undoPick, disabled: !run.picks.length, 'aria-keyshortcuts': 'Z', title: 'Tasto Z' }, '↩ Annulla ultima'),
         !chaos && h('button', { class: 'btn', onclick: doReroll, disabled: !E.canReroll(run), 'aria-keyshortcuts': 'R', title: 'Tasto R' },
           `🔄 Reroll (${left === Infinity ? '∞' : left})`),
-        S.getSettings().skipEnabled && h('button', { class: 'btn', onclick: doSkip, title: 'Tasto S' }, '⏭ Salta'),
+        h('button', { class: 'btn', onclick: doSkip, title: 'Tasto S', 'aria-keyshortcuts': 'S' }, '⏭ Salta categoria'),
         confirmBtn),
+      pickedPanel(run),
       h('p', { class: 'hint' }, chaos ? 'In modalità Caos le opzioni sono assegnate a caso.' : h('span', {}, 'Tastiera: ', h('span', { class: 'kbd', text: '1' }), ' ', h('span', { class: 'kbd', text: '2' }), ' ', h('span', { class: 'kbd', text: '3' }), ' scegli · ', h('span', { class: 'kbd', text: 'Invio' }), ' conferma · ', h('span', { class: 'kbd', text: 'R' }), ' reroll · ', h('span', { class: 'kbd', text: 'Z' }), ' annulla')));
 
     root.replaceChildren(view);
@@ -371,7 +382,7 @@ export function draft(root) {
     if (['1', '2', '3'].includes(k)) { const id = run.current.options[Number(k) - 1]; if (id) select(id); }
     else if (k === 'r') doReroll();
     else if (k === 'z') undoPick();
-    else if (k === 's' && S.getSettings().skipEnabled) doSkip();
+    else if (k === 's') doSkip();
     else if (k === 'enter' && e.target.tagName !== 'BUTTON' && e.target.getAttribute('role') !== 'button') { e.preventDefault(); confirm(); }
   }
   window.addEventListener('keydown', onKey);
@@ -556,7 +567,6 @@ export function settings(root) {
         switchRow('Suoni', 'Effetti generati al volo, nessun file audio', s.sound, (v) => { set({ sound: v }); if (v) sfx.confirm(); }),
         switchRow('Vibrazione', 'Solo sui dispositivi che la supportano', s.vibration, (v) => { set({ vibration: v }); buzz(40); }),
         switchRow('Animazioni', 'Disattivale per un’interfaccia statica (rispettiamo anche le preferenze di sistema)', s.animations, (v) => set({ animations: v })),
-        switchRow('Pulsante “Salta categoria”', 'Ti permette di saltare una categoria durante il draft', s.skipEnabled, (v) => set({ skipEnabled: v })),
         switchRow('Modalità Stream', 'Interfaccia più grande e pulita, pensata per OBS a 16:9', s.stream, (v) => set({ stream: v }))),
       h('div', { class: 'panel stack' },
         h('h2', { text: 'Tema' }),
@@ -731,7 +741,7 @@ export function help(root) {
         h('li', { text: 'Il ban ti fa escludere fino a 3 elementi prima di cominciare.' }),
         h('li', { text: 'Il seed rende la challenge ripetibile: stesso seed e stesse impostazioni, stesse opzioni.' })),
       h('h2', { text: 'Scorciatoie da tastiera' }),
-      h('p', {}, h('span', { class: 'kbd', text: '1' }), ' ', h('span', { class: 'kbd', text: '2' }), ' ', h('span', { class: 'kbd', text: '3' }), ' scegli · ', h('span', { class: 'kbd', text: 'Invio' }), ' conferma · ', h('span', { class: 'kbd', text: 'R' }), ' reroll · ', h('span', { class: 'kbd', text: 'Z' }), ' annulla ultima scelta · ', h('span', { class: 'kbd', text: 'S' }), ' salta (se attivo)'),
+      h('p', {}, h('span', { class: 'kbd', text: '1' }), ' ', h('span', { class: 'kbd', text: '2' }), ' ', h('span', { class: 'kbd', text: '3' }), ' scegli · ', h('span', { class: 'kbd', text: 'Invio' }), ' conferma · ', h('span', { class: 'kbd', text: 'R' }), ' reroll · ', h('span', { class: 'kbd', text: 'Z' }), ' annulla ultima scelta · ', h('span', { class: 'kbd', text: 'S' }), ' salta categoria'),
       h('h2', { text: 'Consigli per realizzare il gioco' }),
       h('ul', {},
         h('li', { text: 'Prototipa con carte di carta in 1 ora: brutto va benissimo, deve solo funzionare.' }),

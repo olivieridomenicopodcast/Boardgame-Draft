@@ -293,3 +293,13 @@ html.stream #view { padding-top: .5rem; padding-bottom: 2.4rem; }
 html.stream .card .desc { font-size: 1.1rem; }
 @media (min-width: 760px) { html.stream .card, html.stream .cards.single .card { height: clamp(220px, 44vh, 700px); } }
 @media (max-width: 480px) { .bar-row { grid-template-columns: 1fr auto; } .bar-row .bar { grid-column: 1 / -1; order: 3; } }
+
+/* ---------- Pannello "Il tuo gioco finora" ---------- */
+.picked-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: .2rem .9rem .6rem; }
+.picked-panel > summary { cursor: pointer; font-weight: 800; min-height: 44px; display: flex; align-items: center; }
+.picked-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem .8rem; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); max-height: 30vh; overflow-y: auto; }
+.picked-list li { display: flex; gap: .5rem; align-items: center; font-size: .9rem; }
+.picked-list .emoji { font-size: 1.3rem; }
+.picked-list .cat { display: block; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 800; }
+.picked-list li.skipped { opacity: .6; }
+html.stream .picked-list { max-height: 14vh; }
