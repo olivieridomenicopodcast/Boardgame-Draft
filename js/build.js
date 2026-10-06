@@ -28,3 +28,18 @@ export function displayBuild(remote) {
   if (remote) return { build: remote.build, sha: remote.sha || '', date: remote.date || '' };
   return { build: 'dev', sha: '', date: '' };
 }
+
+/** "Forza aggiornamento": svuota cache, deregistra i service worker e ricarica. NON tocca i dati salvati. */
+export async function forceUpdate() {
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((r) => r.unregister()));
+    }
+    if (window.caches) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    }
+  } catch { /* si ricarica comunque */ }
+  location.reload();
+}

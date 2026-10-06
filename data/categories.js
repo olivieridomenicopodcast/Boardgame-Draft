@@ -357,3 +357,18 @@ export function findItem(itemId) {
   }
   return null;
 }
+
+/** Etichette leggibili per i tag mostrati sulle carte (i tag senza etichetta restano nascosti). */
+export const TAG_LABELS = {
+  solo: 'solitario', teams: 'squadre', 'one-vs-all': 'uno vs tutti', party: 'party', kids: 'bambini', hardcore: 'hardcore',
+  heavy: 'impegnativo', dark: 'cupo', cozy: 'cozy', cute: 'tenero', ruthless: 'spietato', comedic: 'comico',
+  competitive: 'competitivo', 'direct-attack': 'attacco', 'coop-total': 'cooperativo', 'coop-win': 'coop',
+  'hidden-traitor': 'traditore', 'hidden-info': 'info nascoste', 'social-bluff': 'bluff', negotiation: 'trattative',
+  diplomacy: 'diplomazia', cardcentric: 'carte', dice: 'dadi', paper: 'carta e penna', tiles: 'tessere', wood: 'legno',
+  miniatures: 'miniature', board: 'tabellone', mapboard: 'mappa', 'personal-boards': 'plance', random: 'casualità',
+  engine: 'motore', economy: 'economia', legacy: 'campagna', asymmetric: 'asimmetrico', 'luck-high': 'molta fortuna',
+  'luck-zero': 'zero fortuna', realtime: 'tempo reale', timer: 'tempo', 'short-rules': 'regole brevi', tiny: 'micro',
+  'print-and-play': 'stampabile', 'zero-text': 'senza testo', silent: 'silenzio', 'talk-forced': 'chiacchiere',
+  elimination: 'eliminazione', 'reverse-win': 'al contrario', 'rules-change': 'regole mutevoli', chaos: 'caos',
+  narrative: 'narrativo', movement: 'movimento', draft: 'draft', auction: 'aste', dexterity: 'destrezza',
+};
