@@ -1,0 +1,13 @@
+{
+  "name": "dicetidice-boardgame-draft",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dicetidice Boardgame Draft - PWA per la challenge di draft di un gioco da tavolo",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/engine.test.mjs && node tests/precache.test.mjs",
+    "serve": "npx serve .",
+    "icons": "node tools/make-icons.mjs",
+    "build": "node tools/stamp-build.mjs --out dist"
+  }
+}
